@@ -64,7 +64,7 @@ class Graph {
   /*
     Deletes all the neighbour vertices of the given vertex 
     Complexity : Cost of a linear seach through the vertices plus
-                 the number of neighbours to destroy 
+                 the number of neighbors to destroy 
    */
   bool clearVertex(const T& vertex_id) {
     return clearVertex(Vertex<T>(vertex_id));
@@ -72,7 +72,7 @@ class Graph {
 
   /*
     Deletes every vertex in the graph
-    All vertex has its own list of neighbours which are destroied also
+    All vertex has its own list of neighbors which are destroied also
    */
   void clearAll() {
     vertices.clear();
@@ -96,7 +96,7 @@ class Graph {
   std::string dotRepr(GraphDrawingMode drawing_mode = 
           GraphDrawingMode::DEFAULT) const;
 
-  // The returned string contains all vertices followed by their neighbours
+  // The returned string contains all vertices followed by their neighbors
   std::string str() const {
     std::ostringstream ss;
     for (const Vertex<T>& vertex : vertices) {
@@ -292,7 +292,7 @@ bool Graph<T>::deleteVertex(const T& vertex_id) {
     if (vertex_it != end(vertices)) {
         int k = 0;
         for (auto it = begin(vertices); it != end(vertices); it++, k++) {
-            it->neighbours.remove_one(NeighbourVertex<T>(&(*vertex_it)));
+            it->neighbors.remove_one(NeighborVertex<T>(&(*vertex_it)));
             it->index = k;
             if (k == vertex_it->index) k--;
         }
@@ -307,9 +307,9 @@ bool Graph<T>::newEdge(const T& source_id, const T& target_id, int weight) {
     auto source_it = getIteratorOf(source_id);
     auto target_it = getIteratorOf(target_id);
     if (source_it != end(vertices) and target_it != end(vertices)) {
-        source_it->neighbours.append(NeighbourVertex<T>(&(*target_it), weight));
+        source_it->neighbors.append(NeighborVertex<T>(&(*target_it), weight));
         if (!directed) {
-            target_it->neighbours.append(NeighbourVertex<T>(&(*source_it), weight));
+            target_it->neighbors.append(NeighborVertex<T>(&(*source_it), weight));
         }
         return true;
     }
@@ -321,9 +321,9 @@ bool Graph<T>::deleteEdge(const T& source_id, const T& target_id) {
     auto s_it = vertices.getIteratorOf(source_id);
     auto t_it = vertices.getIteratorOf(target_id);
     if (s_it != end(vertices) and t_it != end(vertices)) {
-        s_it->neighbours.remove_one(NeighbourVertex<T>(&(*t_it)));
+        s_it->neighbors.remove_one(NeighborVertex<T>(&(*t_it)));
         if (!directed) {
-            t_it->neighbours.remove_one(NeighbourVertex<T>(&(*s_it)));
+            t_it->neighbors.remove_one(NeighborVertex<T>(&(*s_it)));
         }
         return true;
     }
@@ -334,7 +334,7 @@ template <typename T>
 bool Graph<T>::clearVertex(const Vertex<T>& vertex) {
     auto it = vertices.getIteratorOf(vertex);
     if (it != end(vertices)) {
-        it->neighbours.clear();
+        it->neighbors.clear();
         return true;
     }
     return false;
@@ -373,13 +373,13 @@ bool Graph<T>::readAdjacencyMatrix(const AdjacencyMatrix& adjacencyMatrix) {
     // At this point the matrix accomplish the requirements
     int i = 0;
     for (Vertex<T>& vertex: vertices) {
-        if (!vertex.neighbours.isEmpty()) {
-            vertex.neighbours.clear();
+        if (!vertex.neighbors.isEmpty()) {
+            vertex.neighbors.clear();
         }
         for (int j = 0; j < degree; j++) {
             if (adjacencyMatrix[i][j] != 0) {
-                vertex.neighbours.append(
-                                         NeighbourVertex<T>(&vertices[j], adjacencyMatrix[i][j])
+                vertex.neighbors.append(
+                                         NeighborVertex<T>(&vertices[j], adjacencyMatrix[i][j])
                                          );
             }
         }
@@ -392,8 +392,8 @@ template <class T>
 AdjacencyMatrix Graph<T>::obtainAdjacencyMatrix() {
     AdjacencyMatrix adjacencyMatrix;
     for (int i = 0; i < degree; i++) {
-        auto it = begin(vertices[i].neighbours);
-        if (it == end(vertices[i - 1].neighbours)) { // The vertex hasn't neighbours
+        auto it = begin(vertices[i].neighbors);
+        if (it == end(vertices[i - 1].neighbors)) { // The vertex hasn't neighbors
             adjacencyMatrix.push_back(std::vector<int>(degree, 0));
         } else {
             adjacencyMatrix.push_back(std::vector<int>());
@@ -403,7 +403,7 @@ AdjacencyMatrix Graph<T>::obtainAdjacencyMatrix() {
                 } else {
                     adjacencyMatrix[i].push_back(weighted ? it->weight : 1);
                     it++;
-                    if (it != end(vertices[i].neighbours))  {
+                    if (it != end(vertices[i].neighbors))  {
                         index = it->vertex->index;
                     }
                 }
@@ -420,7 +420,7 @@ void Graph<T>::bfs(Vertex<T>* root, Graph& resulting_tree) {
     while (!queue.isEmpty()) {
         Vertex<T>* first = queue[0];
         queue.pop_first();
-        for (NeighbourVertex<T>& neighbour : first->neighbours) {
+        for (NeighborVertex<T>& neighbour : first->neighbors) {
             resulting_tree.newVertex(first->id);
             if (!neighbour.vertex->visited) {
                 resulting_tree.newVertex(neighbour.vertex->id);
@@ -440,7 +440,7 @@ void Graph<T>::dfs(Vertex<T>* root, Graph& resulting_tree) {
     while (!stack.isEmpty()) {
         Vertex<T>* first = stack[stack.getLength() - 1];
         stack.pop();
-        for (NeighbourVertex<T>& neighbour : first->neighbours) {
+        for (NeighborVertex<T>& neighbour : first->neighbors) {
             resulting_tree.newVertex(first->id);
             if (!neighbour.vertex->visited) {
                 resulting_tree.newVertex(neighbour.vertex->id);
@@ -461,7 +461,7 @@ void Graph<T>::prim(Vertex<T>* root, Graph& min_expansion_tree) {
         Vertex<T>* best = min_heap.getMin();
         min_heap.pop();
         best->visited = true;
-        for (NeighbourVertex<T>& neighbour : best->neighbours) {
+        for (NeighborVertex<T>& neighbour : best->neighbors) {
             if (neighbour.weight < neighbour.vertex->distance and
                 not neighbour.vertex->visited) {
                 neighbour.vertex->distance = neighbour.weight;
@@ -489,7 +489,7 @@ void Graph<T>::dijkstra(Vertex<T>* source) {
     while (not min_heap.isEmpty()) {
         const Vertex<T>* best = min_heap.getMin();
         min_heap.pop();
-        for (NeighbourVertex<T>& neighbour : best->neighbours) {
+        for (NeighborVertex<T>& neighbour : best->neighbors) {
             if (neighbour.weight + best->distance < neighbour.vertex->distance) {
                 neighbour.vertex->distance = neighbour.weight + best->distance;
                 min_heap.push(neighbour.vertex);
@@ -509,7 +509,7 @@ int Graph<T>::dijkstra(Vertex<T>* source, Vertex<T>* target, List<T>& path) {
             reconstructPath(best, source, path);
             return best->distance;
         }
-        for (NeighbourVertex<T>& neighbour : best->neighbours) {
+        for (NeighborVertex<T>& neighbour : best->neighbors) {
             if (neighbour.weight + best->distance < neighbour.vertex->distance) {
                 neighbour.vertex->distance = neighbour.weight + best->distance;
                 neighbour.vertex->parent = best;
@@ -531,7 +531,7 @@ void Graph<T>::bfs_animation(Vertex<T>* root, List<std::string>& animation) {
     while (!queue.isEmpty()) {
         Vertex<T>* first = queue[0];
         queue.pop_first();
-        for (NeighbourVertex<T>& neighbour : first->neighbours) {
+        for (NeighborVertex<T>& neighbour : first->neighbors) {
             if (!neighbour.vertex->visited) {
                 ss << "\t\"" << first->id << "\" -> \"" << neighbour.vertex->id << "\"\n";
                 queue.append(neighbour.vertex);
@@ -554,7 +554,7 @@ void Graph<T>::dfs_animation(Vertex<T>* root, List<std::string>& animation) {
     while (!stack.isEmpty()) {
         Vertex<T>* first = stack[stack.getLength() - 1];
         stack.pop();
-        for (NeighbourVertex<T>& neighbour : first->neighbours) {
+        for (NeighborVertex<T>& neighbour : first->neighbors) {
             if (!neighbour.vertex->visited) {
                 ss << "\t\"" << first->id << "\" -> \"" << neighbour.vertex->id << "\"\n";
                 stack.append(neighbour.vertex);
@@ -575,7 +575,7 @@ void Graph<T>::dijkstra_animation(Vertex<T>* source,
     while (not min_heap.isEmpty()) {
         const Vertex<T>* best = min_heap.getMin();
         min_heap.pop();
-        for (NeighbourVertex<T>& neighbour : best->neighbours) {
+        for (NeighborVertex<T>& neighbour : best->neighbors) {
             if (neighbour.weight + best->distance < neighbour.vertex->distance) {
                 neighbour.vertex->distance = neighbour.weight + best->distance;
                 min_heap.push(neighbour.vertex);
@@ -603,10 +603,10 @@ std::string Graph<T>::dotRepr(GraphDrawingMode drawingMode) const {
     ss << (directed ? "digraph " : "strict graph ") << " {\n";
     
     for (const Vertex<T>& vertex : vertices) {
-        if (vertex.neighbours.isEmpty()) {
+        if (vertex.neighbors.isEmpty()) {
             ss << "\t\"" << vertex.id << "\"" << std::endl;
         } else {
-            for (const NeighbourVertex<T>& neighbor : vertex.neighbours) {
+            for (const NeighborVertex<T>& neighbor : vertex.neighbors) {
                 // This switch it's so dirty.
                 switch (drawingMode) {
                     case GraphDrawingMode::DEFAULT:

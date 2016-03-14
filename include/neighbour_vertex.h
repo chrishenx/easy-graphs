@@ -24,8 +24,8 @@
 	Contact the author: chrishendrix24@gmail.com
 */
 
-#ifndef NEIGHBOUR_VERTEX_H
-#define NEIGHBOUR_VERTEX_H
+#ifndef Neighbor_VERTEX_H
+#define Neighbor_VERTEX_H
 
 #include <ostream>
 #include <iostream>
@@ -38,37 +38,37 @@ namespace easy_graphs {
   class Graph;
 
   template<typename VertexType, typename EdgeType>
-  class NeighbourVertex;
+  class NeighborVertex;
 
   template<typename VertexType, typename EdgeType>
   std::ostream& operator<<(std::ostream& os,
-    const NeighbourVertex<VertexType, EdgeType>& neighbour);
+    const NeighborVertex<VertexType, EdgeType>& Neighbor);
 
 
-  // neighbour 
+  // Neighbor 
 
   template<typename VertexType, typename EdgeType>
-  class NeighbourVertex {
+  class NeighborVertex {
     friend class Graph < VertexType, EdgeType > ;
     friend class Vertex < VertexType, EdgeType > ;
     friend std::ostream& operator<<<VertexType, EdgeType>(std::ostream& os,
-      const NeighbourVertex& neighbour);
+      const NeighborVertex& Neighbor);
   public:
-    NeighbourVertex() = default;
-    NeighbourVertex(Vertex<VertexType, EdgeType>* const vertex, const EdgeType& weight)
+    NeighborVertex() = default;
+    NeighborVertex(Vertex<VertexType, EdgeType>* const vertex, const EdgeType& weight)
       : vertex(vertex), weight(weight) {}
-    NeighbourVertex(const NeighbourVertex& other)
+    NeighborVertex(const NeighborVertex& other)
       : vertex(other.vertex), weight(other.weight) {}
-    NeighbourVertex(NeighbourVertex&& other)
+    NeighborVertex(NeighborVertex&& other)
       : vertex(other.vertex), weight(std::move(other.weight)) {}
-    NeighbourVertex& operator=(const NeighbourVertex& other) {
+    NeighborVertex& operator=(const NeighborVertex& other) {
       if (this != &other) {
         vertex = other.vertex;
         weight = other.weight;
       }
       return *this;
     }
-    NeighbourVertex& operator=(NeighbourVertex&& other) {
+    NeighborVertex& operator=(NeighborVertex&& other) {
       if (this != &other) {
         vertex = other.vertex;
         weight = std::move(other.weight);
@@ -82,12 +82,12 @@ namespace easy_graphs {
 
   template<typename VertexType, typename EdgeType>
   std::ostream& operator<<(std::ostream& os,
-    const NeighbourVertex<VertexType, EdgeType>& neighbour) {
-    os << neighbour.vertex->getId() << " | " << neighbour.weight;
+    const NeighborVertex<VertexType, EdgeType>& Neighbor) {
+    os << Neighbor.vertex->getId() << " | " << Neighbor.weight;
     return os;
   }
 
   // easy_graphs namespace std
 }
 
-#endif // NEIGHBOUR_VERTEX_H
+#endif // Neighbor_VERTEX_H

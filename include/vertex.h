@@ -36,7 +36,7 @@ namespace easy_graphs {
   class Vertex;
 
   template<typename VertexType, typename EdgeType>
-  class NeighbourVertex;
+  class NeighborVertex;
 
   template<typename VertexType, typename EdgeType>
   std::ostream& operator<<(std::ostream& os,
@@ -49,23 +49,23 @@ namespace easy_graphs {
   template<typename VertexType, typename EdgeType>
   class Vertex {
     friend class Graph < VertexType, EdgeType > ;
-    friend class NeighbourVertex < VertexType, EdgeType > ;
+    friend class NeighborVertex < VertexType, EdgeType > ;
     friend std::ostream& operator<<<VertexType, EdgeType>(std::ostream& os,
       const Vertex& vertex);
   public:
     Vertex() = default;
     Vertex(const VertexType& id, int index = 0) : id(id), index(index) {}
-    Vertex(const Vertex& other) : id(other.id), neighbours(other.neighbours) {
+    Vertex(const Vertex& other) : id(other.id), neighbors(other.neighbors) {
       index = other.index;
     }
     Vertex(Vertex&& other)
-      : id(std::move(other.id)), neighbours(std::move(other.neighbours)) {
+      : id(std::move(other.id)), neighbors(std::move(other.neighbors)) {
       index = other.index;
     }
     Vertex& operator=(const Vertex& other) {
       if (this != &other) {
         index = other.index;
-        neighbours = other.neighbours;
+        neighbors = other.neighbors;
         id = other.id;
       }
       return *this;
@@ -73,7 +73,7 @@ namespace easy_graphs {
     Vertex& operator=(Vertex&& other) {
       if (this != &other) {
         index = other.index;
-        neighbours = std::move(other.neighbours);
+        neighbors = std::move(other.neighbors);
         id = std::move(other.id);
       }
       return *this;
@@ -91,14 +91,14 @@ namespace easy_graphs {
     int distance = INT32_MAX;
     Vertex* parent = nullptr;
     std::unordered_map < Vertex<VertexType, EdgeType>*,
-      NeighbourVertex < VertexType, EdgeType >> neighbours;
+      NeighborVertex < VertexType, EdgeType >> neighbors;
   };
 
   template<typename VertexType, typename EdgeType>
   std::ostream& operator<<(std::ostream& os,
     const Vertex<VertexType, EdgeType>& vertex) {
     os << vertex.id << "    ";
-    for (const auto& pair : vertex.neighbours) {
+    for (const auto& pair : vertex.neighbors) {
       os << "->  " << pair.second << "   ";
     }
     return os;
