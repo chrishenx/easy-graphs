@@ -31,6 +31,8 @@
 #include <initializer_list>
 #include <ostream>
 
+namespace easy_graphs {
+
 /**
  * @class List A double-linked list
  * Allows to:
@@ -912,4 +914,6 @@ Node<T>* List<T>::getNode(int pos) {
     return node_to_return;
 }
 
-#endif
+} // easy_graphs namespace end
+
+#endif // LIST_H
