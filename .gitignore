@@ -27,4 +27,11 @@
 *.out
 *.app
 
+# Image_files
+*.jpg
+*.png
+
+# Graphviz files
+*.gv
+
 build/
