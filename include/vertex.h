@@ -27,82 +27,81 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-#include <unordered_map>
-#include <cstdint>
-#include <ostream>
+#include "list.h"
+#include <cstddef>
+#include <sstream>
+#include <iostream>
 
 namespace easy_graphs {
-  template<typename VertexType, typename EdgeType>
-  class Vertex;
-
-  template<typename VertexType, typename EdgeType>
-  class NeighborVertex;
 
   template<typename VertexType, typename EdgeType>
   std::ostream& operator<<(std::ostream& os,
     const Vertex<VertexType, EdgeType>& vertex);
 
-  template<typename VertexType, typename EdgeType>
+  template<class T>
+  class NeighborVertex;
+
+  template<class T>
   class Graph;
 
-
-  template<typename VertexType, typename EdgeType>
+  template<class T>
   class Vertex {
-    friend class Graph < VertexType, EdgeType > ;
-    friend class NeighborVertex < VertexType, EdgeType > ;
-    friend std::ostream& operator<<<VertexType, EdgeType>(std::ostream& os,
-      const Vertex& vertex);
+    friend class NeighborVertex<T>;
+    friend class Graph<T>;
   public:
-    Vertex() = default;
-    Vertex(const VertexType& id, int index = 0) : id(id), index(index) {}
+      Vertex(const T& _id, size_t index = 0) : id(_id) {
+      // std::cout << "Vertex default constructor" << std::endl;
+      this->index = index;
+    }
+
     Vertex(const Vertex& other) : id(other.id), neighbors(other.neighbors) {
       index = other.index;
+      // std::cout << "Vertex copy constructor" << std::endl;
     }
-    Vertex(Vertex&& other)
-      : id(std::move(other.id)), neighbors(std::move(other.neighbors)) {
+    
+    Vertex(Vertex&& other) 
+        : id(std::move(other.id)), neighbors(std::move(other.neighbors)) {
       index = other.index;
+      // std::cout << "Vertex move constructor" << std::endl;
     }
-    Vertex& operator=(const Vertex& other) {
-      if (this != &other) {
-        index = other.index;
-        neighbors = other.neighbors;
-        id = other.id;
-      }
-      return *this;
-    }
-    Vertex& operator=(Vertex&& other) {
-      if (this != &other) {
-        index = other.index;
-        neighbors = std::move(other.neighbors);
-        id = std::move(other.id);
-      }
-      return *this;
-    }
-    const VertexType& getId() const {
+
+    const T& getId() const {
       return id;
     }
-    bool operator<(const Vertex& other) const { return distance < other.distance; }
-    bool operator>(const Vertex& other) const { return distance > other.distance; }
+
+    bool operator==(const Vertex& other) const {
+      return id == other.id;
+    }
+    
+    bool operator==(const T& other_id) const {
+      return id == other_id;
+    }
+
+    bool operator<(const Vertex& other) const {
+      return distance < other.distance;
+    }
+
+    bool operator>(const Vertex& other) const {
+      return distance > other.distance;
+    }
+
+    std::string str() const {
+      std::stringstream os;
+      os << id << "    ";
+      for (const NeighborVertex<T>& neighbor : neighbors) {
+        os << "->  " << neighbor.str() << "   ";
+      }
+      return os.str();
+    }
 
   private:
-    VertexType id;
-    int index;
+    T id;
+    size_t index;
     bool visited = false;
-    int distance = INT32_MAX;
+    size_t distance = INT32_MAX;
     Vertex* parent = nullptr;
-    std::unordered_map < Vertex<VertexType, EdgeType>*,
-      NeighborVertex < VertexType, EdgeType >> neighbors;
+    List<NeighbourVertex<T>> neighbors;
   };
-
-  template<typename VertexType, typename EdgeType>
-  std::ostream& operator<<(std::ostream& os,
-    const Vertex<VertexType, EdgeType>& vertex) {
-    os << vertex.id << "    ";
-    for (const auto& pair : vertex.neighbors) {
-      os << "->  " << pair.second << "   ";
-    }
-    return os;
-  }
 
   // easy_graphs namespace end
 }
