@@ -29,7 +29,6 @@
 
 #include <ostream>
 #include <iostream>
-#include "integer_wrapper.h"
 
 namespace easy_graphs {
   template<typename VertexType, typename EdgeType>
@@ -38,7 +37,7 @@ namespace easy_graphs {
   template<typename VertexType, typename EdgeType>
   class Graph;
 
-  template<typename VertexType, typename EdgeType = Integer>
+  template<typename VertexType, typename EdgeType>
   class NeighbourVertex;
 
   template<typename VertexType, typename EdgeType>
