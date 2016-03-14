@@ -13,6 +13,8 @@
 #include <fstream>
 #include <cstdlib>
 
+static const std::string dotPath = "dot"; // asuming that is in the system path  
+
 inline static bool dotRepr2PNG(const std::string& dot_repr,
     const std::string& filename, const std::string& folder = "") {
   std::ofstream ofs("graph.gv");
@@ -22,7 +24,7 @@ inline static bool dotRepr2PNG(const std::string& dot_repr,
   }
   ofs << dot_repr;
   ofs.close();
-  system(std::string("/usr/local/bin/dot -Tpng graph.gv -o " + filename + ".png").c_str());
+  system((dotPath + " -Tpng graph.gv -o " + filename + ".png").c_str());
   if (!folder.empty()) {
     system(std::string("move " + filename + ".png " + folder).c_str());
   }
@@ -38,7 +40,7 @@ inline static bool dotRepr2JPEG(const std::string& dot_repr,
   }
   ofs << dot_repr;
   ofs.close();
-  system(std::string("/usr/local/bin/dot -Tjpeg graph.gv -o " + filename + ".jpg").c_str());
+  system((dotPath + " -Tjpeg graph.gv -o " + filename + ".jpg").c_str());
   if (!folder.empty()) {
     system(std::string("move " + filename + ".png " + folder).c_str());
   }
