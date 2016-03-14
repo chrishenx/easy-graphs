@@ -27,11 +27,45 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "node.h"
 #include <initializer_list>
 #include <ostream>
 
 namespace easy_graphs {
+  
+template <class T>
+class List;
+
+/**
+ * @class Node
+ * @brief Nodo de una lista doblemente enlazada.
+ * @details Alamacena:
+ *          - Un apuntador a un nodo siguiente, si existe, claro.
+ *			- Un apuntador a un nodo previo, si existe, claro.
+ *          - Un dato/valor, es decir, la informaci�n del nodo.
+ * @author Gonz�lez Le�n Christian (chrishenx)
+ * @date 09/10/2014
+ * @version 1.0
+ * @see List
+ */
+template <class T>
+class Node {
+	friend class List<T>;
+ public:
+	Node(const T& val, Node* previous = nullptr, Node* next = nullptr)
+		: value(val) {
+		this->previous = previous;
+		this->next = next;
+	}
+  Node(T&& val, Node* previous = nullptr, Node* next = nullptr)
+		: value(std::move(val)) {
+		this->previous = previous;
+		this->next = next;
+	}
+ private:
+	T value;
+	Node* previous;
+	Node* next;
+};
 
 /**
  * @class List A double-linked list
