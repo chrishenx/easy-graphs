@@ -14,10 +14,12 @@
 #include <cstdlib>
 
 struct dot_extension {
-  static std::string dotPath = "dot"; // asuming that is in the system path  
+  static std::string dotPath;  
 
   inline static bool dotRepr2PNG(const std::string& dot_repr,
       const std::string& filename, const std::string& folder = "") {
+    if (dotPath.empty()) return false;    
+        
     std::ofstream ofs("graph.gv");
     if (ofs.fail()) {
       ofs.close();
@@ -34,6 +36,8 @@ struct dot_extension {
 
   inline static bool dotRepr2JPEG(const std::string& dot_repr,
       const std::string& filename, const std::string& folder = "") {
+    if (dotPath.empty()) return false;
+        
     std::ofstream ofs("graph.gv");
     if (ofs.fail()) {
       ofs.close();
