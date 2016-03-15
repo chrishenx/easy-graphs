@@ -53,6 +53,6 @@ struct dot_extension {
   }  
   
   
-}
+};
 
 #endif // DOT_EXTENCION_H

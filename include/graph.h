@@ -9,6 +9,9 @@
 
 #include "vertex.h"
 #include "neighbor_vertex.h"
+#include "heap.h"
+
+namespace easy_graphs {
 
 enum class GraphDrawingMode {
     DEFAULT,
@@ -211,11 +214,6 @@ private:
 
 // ----------------- IMPLEMENTATION --------------------
 
-
-#include "heap.h"
-
-#include <iostream> // TODO Delete after testing
-
 template <typename T>
 class Graph;
 
@@ -238,7 +236,7 @@ Graph<T>::Graph(const Graph<T>& other) : vertices(other.vertices) {
     weighted = other.weighted;
     directed = other.directed;
     degree = other.degree;
-    std::cout << "Graph copy constructor" << std::endl;
+    //std::cout << "Graph copy constructor" << std::endl;
 }
 
 template <typename T>
@@ -247,7 +245,7 @@ Graph<T>::Graph(Graph<T>&& other) : vertices(std::move(other.vertices)) {
     directed = other.directed;
     degree = other.degree;
     other.degree = 0;
-    std::cout << "Graph move constructor" << std::endl;
+    //std::cout << "Graph move constructor" << std::endl;
 }
 
 template <typename T>
@@ -257,7 +255,7 @@ Graph<T>& Graph<T>::operator=(const Graph& other) {
         weighted = other.weighted;
         directed = other.directed;
         degree = other.degree;
-        std::cout << "Graph copy assignation" << std::endl;
+        //std::cout << "Graph copy assignation" << std::endl;
     }
     return *this;
 }
@@ -270,7 +268,7 @@ Graph<T>& Graph<T>::operator=(Graph&& other) {
         directed = other.directed;
         degree = other.degree;
         other.degree = 0;
-        std::cout << "Graph move assignation" << std::endl;
+        //std::cout << "Graph move assignation" << std::endl;
     }
     return *this;
 }
@@ -572,7 +570,7 @@ void Graph<T>::dijkstra_animation(Vertex<T>* source,
     source->distance = 0;
     MinHeap<Vertex<T>*> min_heap = {source};
     animation.append(dotRepr(GraphDrawingMode::SHOW_DISTANCES));
-    while (not min_heap.isEmpty()) {
+    while (! min_heap.empty()) {
         const Vertex<T>* best = min_heap.getMin();
         min_heap.pop();
         for (NeighborVertex<T>& neighbour : best->neighbors) {
@@ -642,5 +640,7 @@ std::string Graph<T>::dotRepr(GraphDrawingMode drawingMode) const {
     ss << "}";
     return ss.str();
 }
+
+} // easy_graphs namespace end
 
 #endif // GRAPH_H

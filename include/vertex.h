@@ -34,10 +34,6 @@
 
 namespace easy_graphs {
 
-  template<typename VertexType, typename EdgeType>
-  std::ostream& operator<<(std::ostream& os,
-    const Vertex<VertexType, EdgeType>& vertex);
-
   template<class T>
   class NeighborVertex;
 
@@ -85,22 +81,13 @@ namespace easy_graphs {
       return distance > other.distance;
     }
 
-    std::string str() const {
-      std::stringstream os;
-      os << id << "    ";
-      for (const NeighborVertex<T>& neighbor : neighbors) {
-        os << "->  " << neighbor.str() << "   ";
-      }
-      return os.str();
-    }
-
   private:
     T id;
     size_t index;
     bool visited = false;
     size_t distance = INT32_MAX;
     Vertex* parent = nullptr;
-    List<NeighbourVertex<T>> neighbors;
+    List<NeighborVertex<T>> neighbors;
   };
 
   // easy_graphs namespace end
