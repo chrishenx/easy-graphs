@@ -34,4 +34,7 @@
 # Graphviz files
 *.gv
 
+# Others
+*.DS_Store
+
 build/
