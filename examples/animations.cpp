@@ -12,10 +12,12 @@
 
 #include <iostream>
 #include "../include/graph.h"
-#include "../include/tools/dot_extencion.h"
+#include "../include/tools/dot_extension.h"
 
 using namespace std;
 using namespace easy_graphs;
+
+string dot_extension::dotPath = "/usr/local/bin/dot"; // In case the dot binary is not in your system path  
 
 int main()
 {
@@ -47,7 +49,7 @@ int main()
   for (const string& dot_repr : bfs_animation) {
     cout << "Rendering:" << endl;
     cout << dot_repr << endl;
-    dotRepr2JPEG(dot_repr, "bfs_animation" + to_string(i), "bfs_animation");
+    dot_extension::dotRepr2JPEG(dot_repr, "bfs_animation" + to_string(i), "bfs_animation");
     cout << "Done!" << endl;
     i++;
   }
@@ -55,11 +57,11 @@ int main()
   cout << "\nCreating DFS animation" << endl;
   List<string> dfs_animation = graph.dfs_animation('s'); 
 
-  int i = 0;
+  i = 0;
   for (const string& dot_repr : dfs_animation) {
     cout << "Rendering:" << endl;
     cout << dot_repr << endl;
-    dotRepr2JPEG(dot_repr, "dfs_animation" + to_string(i), "dfs_animation");
+    dot_extension::dotRepr2JPEG(dot_repr, "dfs_animation" + to_string(i), "dfs_animation");
     cout << "Done!" << endl;
     i++;
   }
@@ -67,11 +69,11 @@ int main()
   cout << "\nCreating Dijkstra animation" << endl;
   List<string> dijkstra_animation = graph.dijkstra_animation('s'); 
 
-  int i = 0;
+  i = 0;
   for (const string& dot_repr : dijkstra_animation) {
     cout << "Rendering:" << endl;
     cout << dot_repr << endl;
-    dotRepr2JPEG(dot_repr, "dijkstra_animation" + to_string(i), "dijkstra_animation");
+    dot_extension::dotRepr2JPEG(dot_repr, "dijkstra_animation" + to_string(i), "dijkstra_animation");
     cout << "Done!" << endl;
     i++;
   }
